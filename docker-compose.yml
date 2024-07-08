@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: todo_api
+    command: python manage.py runserver
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - /tmp/app/mysqld:/run/mysqld
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mysql:8.0.38
+    container_name: mysql_db
+    healthcheck:
+      test: ["CMD", "mysqladmin","ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 2
+    env_file:
+      - .env
+    ports:
+      - "3307:3306"
+    volumes:
+      - /tmp/app/mysqld:/var/run/mysqld
+      - ./db:/var/lib/mysql
+
+volumes:
+  mysql_data:
