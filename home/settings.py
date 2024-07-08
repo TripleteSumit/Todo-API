@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "corsheaders",
     "rest_framework_simplejwt",
-    "guniron",
+    "gunicron",
     "core",
 ]
 
@@ -91,7 +91,7 @@ DATABASES = {
         "HOST": "localhost",
         "USER": "root",
         "PASSWORD": config("MYSQL_ROOT_PASSWORD"),  # "Sumit@Dey",
-        "PORT": "3307",
+        "PORT": "3306",
     }
 }
 
