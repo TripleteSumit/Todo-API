@@ -5,11 +5,11 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: todo_api
-    command: python manage.py runserver
+    command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
+      - .:/api
       - /tmp/app/mysqld:/run/mysqld
     depends_on:
       db:
