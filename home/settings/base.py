@@ -10,27 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+from datetime import timedelta
 import os
 from pathlib import Path
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-%=o2zubygpr!%br0z8=a#+m=#sxec241#=7%r=gm^fqu2ue@y="
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -44,8 +31,9 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "corsheaders",
     "rest_framework_simplejwt",
-    "gunicron",
+    "gunicorn",
     "core",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -65,7 +53,7 @@ ROOT_URLCONF = "home.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -79,21 +67,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "home.wsgi.application"
-
-
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": config("MYSQL_DATABASE"),
-        "HOST": "localhost",
-        "USER": "root",
-        "PASSWORD": config("MYSQL_ROOT_PASSWORD"),  # "Sumit@Dey",
-        "PORT": "3306",
-    }
-}
 
 
 # Password validation
@@ -134,9 +107,8 @@ EMAIL = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-MEDIA_URL = "api/image/"
+MEDIA_URL = "api/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
@@ -149,5 +121,18 @@ AUTH_USER_MODEL = "core.user"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
+    ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Todo API",
+    "DESCRIPTION": "This is our small todo api which is used for managing daily task.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=10),
 }

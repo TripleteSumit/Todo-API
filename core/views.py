@@ -16,6 +16,8 @@ from home.utils import get_token, send_mail_for_login_otp
 
 
 class UserSignupView(APIView):
+    serializer_class = None
+
     def post(self, request):
         serializer = UserSignupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
