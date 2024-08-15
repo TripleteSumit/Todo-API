@@ -16,10 +16,10 @@ from home.utils import get_token, send_mail_for_login_otp
 
 
 class UserSignupView(APIView):
-    serializer_class = None
+    serializer_class = UserSignupSerializer
 
     def post(self, request):
-        serializer = UserSignupSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(
