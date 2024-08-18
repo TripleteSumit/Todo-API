@@ -7,6 +7,15 @@ from home.utils import is_valid_email
 
 
 class UserSignupSerializer(serializers.ModelSerializer):
+    confirm_password = serializers.CharField(
+        write_only=True,
+        style={"input_type": "password", "palceholder": "Confirm Password"},
+    )
+    password = serializers.CharField(
+        write_only=True,
+        style={"input_type": "password", "placeholder": "Password"},
+    )
+
     class Meta:
         model = User
         fields = (
@@ -16,10 +25,6 @@ class UserSignupSerializer(serializers.ModelSerializer):
             "password",
             "confirm_password",
         )
-
-    confirm_password = serializers.CharField(
-        write_only=True, style={"input_type": "password", "palceholder": "Password"}
-    )
 
     def validate(self, data):
         email = data.get("email")
@@ -31,7 +36,9 @@ class UserSignupSerializer(serializers.ModelSerializer):
         if not is_valid_email(email):
             serializers.ValidationError("Invalid Email!")
         if password != confirm_password:
-            raise serializers.ValidationError("Password doesn't match")
+            raise serializers.ValidationError(
+                {"password": "Confirm password doesn't match."}
+            )
 
         errors = {}
 
@@ -71,18 +78,19 @@ class UserProfielSerailizer(serializers.ModelSerializer):
 
     def validate(self, data):
         expected_fields = ["user_name", "profile", "cover_photo", "Description"]
+        required_keys = ["user_name"]
         fields: dict = self.initial_data
         errors = []
         required_key = []
         unexpected_key = []
         for field in fields.keys():
-            if not field in expected_fields:
+            if field not in expected_fields:
                 unexpected_key.append(field)
 
         if unexpected_key:
             errors.append({"unexpected_fields": unexpected_key})
 
-        for field in expected_fields:
+        for field in required_keys:
             if field not in fields.keys():
                 required_key.append(field)
 
