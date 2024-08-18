@@ -162,3 +162,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 private_key.txt
+
+dev.env
+mod_dev.env
+prod.env
+docker-compose.prod.yml

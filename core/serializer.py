@@ -67,16 +67,21 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
 
 class UserProfielSerailizer(serializers.ModelSerializer):
-    user_name = serializers.SerializerMethodField(method_name="get_user_name")
+    user_name = serializers.CharField(write_only=True)
 
     class Meta:
         model = UserProfile
         fields = ("user_name", "profile", "cover_photo", "Description")
 
-    def get_user_name(self, obj):
-        return f"{obj.user.first_name} {obj.user.last_name}"
+    def to_representation(self, instance):
+        representation = super(UserProfielSerailizer, self).to_representation(instance)
+        representation["user_name"] = (
+            f"{instance.user.first_name} {instance.user.last_name}"
+        )
+        return representation
 
     def validate(self, data):
+        print(data)
         expected_fields = ["user_name", "profile", "cover_photo", "Description"]
         required_keys = ["user_name"]
         fields: dict = self.initial_data
@@ -102,12 +107,12 @@ class UserProfielSerailizer(serializers.ModelSerializer):
         return data
 
     def update(self, instance, validated_data):
-        user_name: str = self.context.get("request").data.get("user_name")
+        user_name: str = validated_data.pop("user_name")
         if user_name:
             first_name, last_name = user_name.rsplit(" ", 1)
             instance.user.first_name = first_name
             instance.user.last_name = last_name
-            instance.save()
+            instance.user.save()
         return super().update(instance, validated_data)
 
 
