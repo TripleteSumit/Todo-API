@@ -108,7 +108,7 @@ EMAIL = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
 STATIC_URL = "static/"
 
-MEDIA_URL = "api/"
+MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type

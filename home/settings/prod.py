@@ -3,8 +3,7 @@ from .base import *
 
 SECRET_KEY = os.environ["SECRET_KEY"]
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["localhost"]
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
