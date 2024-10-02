@@ -27,6 +27,7 @@ urlpatterns = (
         path("", view=TemplateView.as_view(template_name="home.html")),
         path("admin/", admin.site.urls),
         path("api/", include("core.urls")),
+        path("api/", include("dashboard.urls")),
         path("api-auth/", include("rest_framework.urls")),
         path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
         path(

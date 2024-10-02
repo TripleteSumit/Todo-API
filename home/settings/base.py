@@ -32,8 +32,9 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework_simplejwt",
     "gunicorn",
-    "core",
     "drf_spectacular",
+    "core",
+    "dashboard",
 ]
 
 MIDDLEWARE = [

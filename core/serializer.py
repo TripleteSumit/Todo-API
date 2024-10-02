@@ -81,7 +81,6 @@ class UserProfielSerailizer(serializers.ModelSerializer):
         return representation
 
     def validate(self, data):
-        print(data)
         expected_fields = ["user_name", "profile", "cover_photo", "Description"]
         required_keys = ["user_name"]
         fields: dict = self.initial_data
@@ -95,9 +94,10 @@ class UserProfielSerailizer(serializers.ModelSerializer):
         if unexpected_key:
             errors.append({"unexpected_fields": unexpected_key})
 
-        for field in required_keys:
-            if field not in fields.keys():
-                required_key.append(field)
+        if not self.partial:
+            for field in required_keys:
+                if field not in fields.keys():
+                    required_key.append(field)
 
         if required_key:
             errors.append({"required_fields": required_key})
@@ -107,7 +107,7 @@ class UserProfielSerailizer(serializers.ModelSerializer):
         return data
 
     def update(self, instance, validated_data):
-        user_name: str = validated_data.pop("user_name")
+        user_name: str = validated_data.pop("user_name", None)
         if user_name:
             first_name, last_name = user_name.rsplit(" ", 1)
             instance.user.first_name = first_name

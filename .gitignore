@@ -167,3 +167,6 @@ dev.env
 mod_dev.env
 prod.env
 docker-compose.prod.yml
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
