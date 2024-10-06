@@ -170,3 +170,4 @@ docker-compose.prod.yml
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
+features.md
