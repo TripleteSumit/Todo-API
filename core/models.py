@@ -7,24 +7,26 @@ from core.signal import user_login_profile_cration_post_save_signal
 
 class UserManger(BaseUserManager):
 
-    def create_user(self, first_name, last_name, email, password=None):
+    def create_user(self, first_name, last_name, email, role, password=None):
         if not email:
             raise ValueError("User must have an email address")
         user = self.model(
             email=self.normalize_email(email),
             first_name=first_name,
             last_name=last_name,
+            role=role,
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, first_name, last_name, password=None):
+    def create_superuser(self, email, first_name, last_name, role, password=None):
         user = self.create_user(
             email=self.normalize_email(email),
             first_name=first_name,
             last_name=last_name,
+            role=role,
         )
 
         user.is_admin = True
@@ -42,6 +44,8 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
+    ROLE_CHOICES = (("admin", "Admin"), ("regular", "Regular"))
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="regular")
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)
     created_date = models.DateTimeField(auto_now_add=True)
@@ -55,13 +59,13 @@ class User(AbstractBaseUser):
     objects = UserManger()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", "last_name"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "role"]
 
     def __str__(self) -> str:
         return self.email
 
     def has_perm(self, perm, obj=None):
-        return self.is_admin
+        return self.is_superadmin
 
     def has_module_perms(self, app_label):
         return True

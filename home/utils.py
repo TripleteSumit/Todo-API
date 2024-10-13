@@ -12,6 +12,7 @@ def get_token(user):
         "access": str(refresh.access_token),
         "user_id": user.id,
         "email": user.email,
+        "role": user.role,
         "login_count": user.login_count,
     }
 

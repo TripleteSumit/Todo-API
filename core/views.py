@@ -12,6 +12,7 @@ from .serializer import (
     UserLoginSerializer,
     UserProfielSerailizer,
 )
+from home.permission import IsAdminFromModel
 from home.utils import get_token, send_mail_for_login_otp
 
 
@@ -62,7 +63,7 @@ class UserLoginView(APIView):
 
 class UserProfileView(APIView):
     serializer_class = UserProfielSerailizer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminFromModel]
 
     def get(self, request):
         user_obj = get_object_or_404(UserProfile, user=request.user)
