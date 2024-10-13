@@ -28,6 +28,13 @@ class Task(models.Model):
     )
     total_subtask = models.SmallIntegerField(blank=True, default=0)
     total_subtask_completed = models.SmallIntegerField(blank=True, default=0)
+    due_date = models.DateField(null=True, blank=True)
+    PRIORITY_CHOICES = (
+        ("high", "High"),
+        ("medium", "Medium"),
+        ("low", "Low"),
+    )
+    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

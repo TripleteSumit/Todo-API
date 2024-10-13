@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework.serializers import ModelSerializer, Serializer, DateField
 from rest_framework.serializers import ValidationError
 from .models import Task, SubTask
 
@@ -47,6 +47,7 @@ class SubTaskSerializer(ModelSerializer):
 
 class TaskSerializer(ModelSerializer):
     subtask = SubTaskSerializer(many=True, read_only=True)
+    due_date = DateField(format="%Y-%m-%d", input_formats="%d/%m/%Y", required=False)
 
     class Meta:
         model = Task
@@ -58,14 +59,24 @@ class TaskSerializer(ModelSerializer):
             "is_important",
             "status",
             "subtask",
+            "priority",
+            "due_date",
             "total_subtask",
             "total_subtask_completed",
         )
 
     def validate(self, data):
         given_date = self.initial_data
-        required_data = ["title"]
-        expected_data = ["title", "description", "attachment", "is_important", "status"]
+        required_data = ["title", "priority"]
+        expected_data = [
+            "title",
+            "description",
+            "attachment",
+            "is_important",
+            "status",
+            "due_date",
+            "priority",
+        ]
         error = []
         unexpected_keys = []
         required_keys = []

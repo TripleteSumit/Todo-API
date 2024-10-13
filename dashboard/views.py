@@ -129,7 +129,10 @@ class SubTaskViewSet(ModelViewSet):
 
     def get_queryset(self):
         task_id = self.kwargs["task_pk"]
-        queryset = SubTask.objects.filter(task_id=task_id).order_by("is_complete")
+        queryset = SubTask.objects.filter(task_id=task_id)
+        if self.action == "partial_update":
+            queryset = queryset.select_related("task")
+        queryset = queryset.order_by("is_complete")
         return queryset
 
     def get_serializer_context(self):
